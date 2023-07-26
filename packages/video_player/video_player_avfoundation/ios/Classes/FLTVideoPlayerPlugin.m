@@ -188,9 +188,13 @@ NS_INLINE UIViewController *rootViewController(void) {
   }
   videoComposition.renderSize = CGSizeMake(width, height);
 
-  // TODO(@recastrodiaz): should we use videoTrack.nominalFrameRate ?
-  // Currently set at a constant 30 FPS
-  videoComposition.frameDuration = CMTimeMake(1, 30);
+  // Fix 2023-07-06
+    float fps = videoTrack.nominalFrameRate;
+  if (fps > 30) {
+    videoComposition.frameDuration = CMTimeMake(1, fps);
+  } else {
+    videoComposition.frameDuration = CMTimeMake(1, 30);
+  }
 
   return videoComposition;
 }
